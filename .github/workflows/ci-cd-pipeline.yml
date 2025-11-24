@@ -32,7 +32,7 @@ jobs:
           python -m unittest discover -s app/tests
 
       - name: Run SonarQube Analysis
-        uses: sonarsource/sonarcloud-github-action@v1.5
+        uses: aquasecurity/trivy-action@main
         with:
           projectBaseDir: ./app
           sonarToken: ${{ secrets.SONAR_TOKEN }}
@@ -55,4 +55,3 @@ jobs:
           echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
           docker tag devsecops-app:latest $DOCKER_USERNAME/devsecops-app:latest
           docker push $DOCKER_USERNAME/devsecops-app:latest
-          
