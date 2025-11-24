@@ -34,6 +34,8 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           projectBaseDir: ./app
+          organization: uzairran
+          projectKey: devsecops-pipeline
 
       - name: Build Docker Image 
         run: |
@@ -53,4 +55,3 @@ jobs:
           echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
           docker tag devsecops-app:latest $DOCKER_USERNAME/devsecops-app:latest
           docker push $DOCKER_USERNAME/devsecops-app:latest
- 
