@@ -1,11 +1,5 @@
-import sys
-import os
 import unittest
-
-# Add src to sys.path
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
-
-from main import app
+from app.src.main import app
 
 class AppTestCase(unittest.TestCase):
     def setUp(self):
