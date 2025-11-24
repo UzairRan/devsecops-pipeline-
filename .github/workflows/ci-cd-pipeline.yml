@@ -34,8 +34,6 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           projectBaseDir: ./app
-          organization: uzairran
-          projectKey: devsecops-pipeline
 
       - name: Build Docker Image 
         run: |
