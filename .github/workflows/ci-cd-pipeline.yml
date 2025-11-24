@@ -2,13 +2,9 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches:
-      - main
-      - develop
+    branches: [main, develop]
   pull_request:
-    branches:
-      - main
-      - develop
+    branches: [main, develop]
 
 jobs:
   build:
@@ -32,18 +28,19 @@ jobs:
         run: |
           python -m unittest discover -s app/tests
 
-      - name: Run SonarQube Analysis
-        uses: sonarsource/sonarcloud-github-action@v1.5
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@v2.2.0
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           projectBaseDir: ./app
-          sonarToken: ${{ secrets.SONAR_TOKEN }}
 
-      - name: Build Docker Image
+      - name: Build Docker Image 
         run: |
           docker build -t devsecops-app ./app
 
       - name: Scan Docker Image with Trivy
-        uses: aquasecurity/trivy-action@0.20.0
+        uses: aquasecurity/trivy-action@0.28.0
         with:
           image-ref: devsecops-app:latest
           severity: CRITICAL,HIGH
