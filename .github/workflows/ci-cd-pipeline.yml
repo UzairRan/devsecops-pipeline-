@@ -41,11 +41,12 @@ jobs:
         run: |
           docker build -t devsecops-app ./app
 
-      - name: Scan Docker Image with Trivy
-        uses: aquasecurity/trivy-action@v0.67.2
-        with:
+      - - name: Scan Docker Image with Trivy
+          uses: aquasecurity/trivy-action@v0.33.1
+          with:
           image-ref: devsecops-app:latest
           severity: CRITICAL,HIGH
+
 
       - name: Push Docker Image
         env:
