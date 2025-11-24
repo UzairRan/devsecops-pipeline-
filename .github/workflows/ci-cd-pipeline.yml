@@ -28,13 +28,6 @@ jobs:
         run: |
           python -m unittest discover -s app/tests
 
-      # Temporarily skipping SonarCloud to prevent CI failure
-      # - name: SonarCloud Scan
-      #   uses: SonarSource/sonarcloud-github-action@v2.2.0
-      #   env:
-      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      #   with:
-      #     projectBaseDir: ./app
 
       - name: Build Docker Image 
         run: |
@@ -54,4 +47,3 @@ jobs:
           echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
           docker tag devsecops-app:latest $DOCKER_USERNAME/devsecops-app:latest
           docker push $DOCKER_USERNAME/devsecops-app:latest
- 
