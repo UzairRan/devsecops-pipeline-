@@ -1,0 +1,57 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r app/requirements.txt
+
+      - name: Run Unit Tests
+        run: |
+          python -m unittest discover -s app/tests
+
+      - name: Run SonarQube Analysis
+        uses: sonarsource/sonarcloud-github-action@v1.5
+        with:
+          projectBaseDir: ./app
+          sonarToken: ${{ secrets.SONAR_TOKEN }}
+
+      - name: Build Docker Image
+        run: |
+          docker build -t devsecops-app ./app
+
+      - name: Scan Docker Image with Trivy
+        uses: aquasecurity/trivy-action@v0.7.1
+        with:
+          image-ref: devsecops-app:latest
+          severity: CRITICAL,HIGH
+
+      - name: Push Docker Image
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: |
+          echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+          docker tag devsecops-app:latest $DOCKER_USERNAME/devsecops-app:latest
+          docker push $DOCKER_USERNAME/devsecops-app:latest
