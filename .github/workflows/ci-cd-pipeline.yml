@@ -32,17 +32,17 @@ jobs:
           python -m unittest discover -s app/tests
 
       - name: Run SonarQube Analysis
-        uses: aquasecurity/trivy-action@main
+        uses: sonarsource/sonarcloud-github-action@v1.5
         with:
           projectBaseDir: ./app
           sonarToken: ${{ secrets.SONAR_TOKEN }}
 
-      - name: Build Docker Image
+      - name: Build Docker Image 
         run: |
           docker build -t devsecops-app ./app
 
       - name: Scan Docker Image with Trivy
-        uses: aquasecurity/trivy-action@0.28.0 
+        uses: aquasecurity/trivy-action@0.28.0
         with:
           image-ref: devsecops-app:latest
           severity: CRITICAL,HIGH
